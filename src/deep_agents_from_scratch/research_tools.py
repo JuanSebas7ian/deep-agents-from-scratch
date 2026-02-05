@@ -8,7 +8,8 @@ from datetime import datetime
 import uuid, base64
 
 import httpx
-from langchain.chat_models import init_chat_model
+from langchain_aws import ChatBedrockConverse
+import langchain_aws.chat_models.bedrock_converse as bc
 from langchain_core.messages import HumanMessage, ToolMessage
 from langchain_core.tools import InjectedToolArg, InjectedToolCallId, tool
 from langgraph.prebuilt import InjectedState
@@ -21,8 +22,30 @@ from typing_extensions import Annotated, Literal
 from deep_agents_from_scratch.prompts import SUMMARIZE_WEB_SEARCH
 from deep_agents_from_scratch.state import DeepAgentState
 
+# --- Bedrock / Llama Compatibility Patch ---
+# FORCE RESET: Always restore the library's original method first to clear any old patches/recursion
+ChatBedrockConverse.bind_tools = bc.ChatBedrockConverse.bind_tools
+# CAPTURE ORIGINAL: This is now guaranteed to be the clean library version
+_lib_original_bind_tools = ChatBedrockConverse.bind_tools
+
+def _patched_bind_tools(self, tools, tool_choice=None, **kwargs):
+    # Determine model name safely using the internal method
+    model_name = self._get_base_model()
+    if "llama" in model_name.lower():
+        if tool_choice not in [None, "auto"]:
+            tool_choice = "auto"
+    return _lib_original_bind_tools(self, tools, tool_choice=tool_choice, **kwargs)
+
+ChatBedrockConverse.bind_tools = _patched_bind_tools
+# -------------------------------------------
+
 # Summarization model 
-summarization_model = init_chat_model(model="openai:gpt-4o-mini")
+# summarization_model = init_chat_model(model="openai:gpt-4o-mini")
+summarization_model = ChatBedrockConverse(
+    model="amazon.nova-lite-v1:0", 
+    region_name="us-east-1", 
+    temperature=0.0
+)
 tavily_client = TavilyClient()
 
 class Summary(BaseModel):
