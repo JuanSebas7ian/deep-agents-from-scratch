@@ -8,18 +8,21 @@
 * **Context offloading to file systems**
 * **Context isolation through sub-agent delegation**
 
-This course will show how to implement these patterns from scratch using LangGraph! 
+This course will show how to implement these patterns from scratch using LangGraph!
 
-## 🚀 Quickstart 
+## 🚀 Quickstart
 
 ### Prerequisites
 
-- Ensure you're using Python 3.11 or later.
-- This version is required for optimal compatibility with LangGraph.
+* Ensure you're using Python 3.11 or later.
+* This version is required for optimal compatibility with LangGraph.
+
 ```bash
 python3 --version
 ```
+
 - [uv](https://docs.astral.sh/uv/) package manager
+
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 # Update PATH to use the new uv version
@@ -29,29 +32,35 @@ export PATH="/Users/$USER/.local/bin:$PATH"
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/langchain-ai/deep-agents-from-scratch.git
 cd deep_agents_from_scratch
 ```
 
-2. Install the package and dependencies (this automatically creates and manages the virtual environment):
+1. Install the package and dependencies (this automatically creates and manages the virtual environment):
+
 ```bash
 uv sync
 ```
 
-3. Create a `.env` file in the project root with your API keys:
+1. Create a `.env` file in the project root with your API keys:
+
 ```bash
 # Create .env file
 touch .env
 ```
 
 Add your API keys to the `.env` file:
+
 ```env
 # Required for research agents with external search
 TAVILY_API_KEY=your_tavily_api_key_here
 
-# Required for model usage
-ANTHROPIC_API_KEY=your_anthropic_api_key_here
+# Required for model usage (AWS Bedrock)
+AWS_ACCESS_KEY_ID=your_aws_access_key_id_here
+AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key_here
+AWS_REGION=us-east-1
 
 # Optional: For evaluation and tracing
 LANGSMITH_API_KEY=your_langsmith_api_key_here
@@ -59,7 +68,8 @@ LANGSMITH_TRACING=true
 LANGSMITH_PROJECT=deep-agents-from-scratch
 ```
 
-4. Run notebooks or code using uv:
+1. Run notebooks or code using uv:
+
 ```bash
 # Run Jupyter notebooks directly
 uv run jupyter notebook
@@ -74,37 +84,42 @@ jupyter notebook
 This repository contains five progressive notebooks that teach you to build advanced AI agents:
 
 ### `0_create_agent.ipynb` -
+
 Learn how to use the create_agent component. This component,
-- implements a ReAct (Reason - Act) loop that forms the foundation for many agents.
-- is easy to use and quick to set up.
-- serves as the
+* implements a ReAct (Reason - Act) loop that forms the foundation for many agents.
+* is easy to use and quick to set up.
+* serves as the
 
 ### `1_todo.ipynb` - Task Planning Foundations
+
 Learn to implement structured task planning using TODO lists. This notebook introduces:
-- Task tracking with status management (pending/in_progress/completed)  
-- Progress monitoring and context management
-- The `write_todos()` tool for organizing complex multi-step workflows
-- Best practices for maintaining focus and preventing task drift
+* Task tracking with status management (pending/in_progress/completed)  
+* Progress monitoring and context management
+* The `write_todos()` tool for organizing complex multi-step workflows
+* Best practices for maintaining focus and preventing task drift
 
 ### `2_files.ipynb` - Virtual File Systems
+
 Implement a virtual file system stored in agent state for context offloading:
-- File operations: `ls()`, `read_file()`, `write_file()`, `edit_file()`
-- Context management through information persistence
-- Enabling agent "memory" across conversation turns
-- Reducing token usage by storing detailed information in files
+* File operations: `ls()`, `read_file()`, `write_file()`, `edit_file()`
+* Context management through information persistence
+* Enabling agent "memory" across conversation turns
+* Reducing token usage by storing detailed information in files
 
 ### `3_subagents.ipynb` - Context Isolation
+
 Master sub-agent delegation for handling complex workflows:
-- Creating specialized sub-agents with focused tool sets
-- Context isolation to prevent confusion and task interference
-- The `task()` delegation tool and agent registry patterns
-- Parallel execution capabilities for independent research streams
+* Creating specialized sub-agents with focused tool sets
+* Context isolation to prevent confusion and task interference
+* The `task()` delegation tool and agent registry patterns
+* Parallel execution capabilities for independent research streams
 
 ### `4_full_agent.ipynb` - Complete Research Agent
-Combine all techniques into a production-ready research agent:
-- Integration of TODOs, files, and sub-agents
-- Real web search with intelligent context offloading
-- Content summarization and strategic thinking tools
-- Complete workflow for complex research tasks with LangGraph Studio integration
 
-Each notebook builds on the previous concepts, culminating in a sophisticated agent architecture capable of handling real-world research and analysis tasks. 
+Combine all techniques into a production-ready research agent:
+* Integration of TODOs, files, and sub-agents
+* Real web search with intelligent context offloading
+* Content summarization and strategic thinking tools
+* Complete workflow for complex research tasks with LangGraph Studio integration
+
+Each notebook builds on the previous concepts, culminating in a sophisticated agent architecture capable of handling real-world research and analysis tasks.

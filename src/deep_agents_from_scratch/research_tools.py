@@ -42,7 +42,7 @@ ChatBedrockConverse.bind_tools = _patched_bind_tools
 # Summarization model 
 # summarization_model = init_chat_model(model="openai:gpt-4o-mini")
 summarization_model = ChatBedrockConverse(
-    model="amazon.nova-lite-v1:0", 
+    model="us.amazon.nova-2-lite-v1:0", 
     region_name="us-east-1", 
     temperature=0.0
 )
