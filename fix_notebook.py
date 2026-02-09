@@ -1,44 +1,51 @@
-import sys
-import os
-sys.path.append(os.path.join(os.getcwd(), "src"))
+#!/usr/bin/env python3
+"""Fix the %%writefile cell in 4_full_agent.ipynb to use @tool instead of @tool(parse_docstring=True)"""
 
-from typing import Annotated, NotRequired, Literal
-from typing_extensions import TypedDict
-from langchain_core.tools import tool, BaseTool
-from langchain_core.messages import BaseMessage, AnyMessage
-from langchain.agents import create_agent, AgentState
-from langgraph.prebuilt import InjectedState
-from langgraph.types import Command
-from langchain_aws import ChatBedrockConverse
-from deep_agents_from_scratch.state import DeepAgentState
+import json
+from pathlib import Path
 
-# Define tools with extras={} explicitly
-@tool(parse_docstring=True, extras={})
-def web_search(query: str) -> str:
-    """Search the web for information.
+notebook_path = Path(__file__).parent / "notebooks" / "4_full_agent.ipynb"
 
-    Args:
-        query: The search query string.
-    """
-    return "result"
+print(f"Reading notebook: {notebook_path}")
 
-# We can't easily change write_todos/read_todos imports unless we patch them
-from deep_agents_from_scratch.todo_tools import read_todos, write_todos
+with open(notebook_path, "r") as f:
+    notebook = json.load(f)
 
-tools = [write_todos, web_search, read_todos]
+changes_made = 0
 
-# Mock model
-model = ChatBedrockConverse(model="us.amazon.nova-2-lite-v1:0", region_name="us-east-1")
+for cell in notebook.get("cells", []):
+    if cell.get("cell_type") == "code":
+        source = cell.get("source", [])
+        # Check if this is the %%writefile cell for research_tools.py
+        if source and "%%writefile" in source[0] and "research_tools.py" in source[0]:
+            print("Found %%writefile cell for research_tools.py")
+            
+            # Replace @tool(parse_docstring=True) with @tool
+            new_source = []
+            for line in source:
+                if "@tool(parse_docstring=True)" in line:
+                    new_line = line.replace("@tool(parse_docstring=True)", "@tool")
+                    new_source.append(new_line)
+                    changes_made += 1
+                    print(f"  Fixed: {line.strip()} -> {new_line.strip()}")
+                else:
+                    new_source.append(line)
+            
+            cell["source"] = new_source
 
-try:
-    print("Creating agent with explicit extras...")
-    agent = create_agent(
-        model,
-        tools,
-        system_prompt="Test prompt",
-        state_schema=DeepAgentState,
-    )
-    print("Success")
-except Exception as e:
-    import traceback
-    traceback.print_exc()
+if changes_made > 0:
+    # Backup original
+    backup_path = notebook_path.with_suffix(".ipynb.backup")
+    with open(backup_path, "w") as f:
+        json.dump(notebook, f, indent=1)
+    print(f"\nBackup saved to: {backup_path}")
+    
+    # Save modified notebook
+    with open(notebook_path, "w") as f:
+        json.dump(notebook, f, indent=1)
+    print(f"Notebook updated: {notebook_path}")
+    print(f"\nTotal changes: {changes_made}")
+else:
+    print("No changes needed - notebook already fixed or pattern not found")
+
+print("\nDone! Now restart the kernel and run all cells.")

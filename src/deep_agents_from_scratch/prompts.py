@@ -71,13 +71,31 @@ Parameters:
 
 Important: This replaces the entire file content."""
 
+# FILE_USAGE_INSTRUCTIONS = """You have access to a virtual file system to help you retain and save context.
+#
+# ## Workflow Process
+# 1. **Orient**: Use ls() to see existing files before starting work
+# 2. **Save**: Use write_file() to store the user's request so that we can keep it for later 
+# 3. **Research**: Proceed with research. The search tool will write files.  
+# 4. **Read**: Once you are satisfied with the collected sources, read the files and use them to answer the user's question directly.
+# """
+
 FILE_USAGE_INSTRUCTIONS = """You have access to a virtual file system to help you retain and save context.
 
-## Workflow Process
-1. **Orient**: Use ls() to see existing files before starting work
-2. **Save**: Use write_file() to store the user's request so that we can keep it for later 
-3. **Research**: Proceed with research. The search tool will write files.  
-4. **Read**: Once you are satisfied with the collected sources, read the files and use them to answer the user's question directly.
+## ⚠️ ABSOLUTE FIRST STEP - NO EXCEPTIONS ⚠️
+Your VERY FIRST tool call in EVERY conversation MUST be `ls()`.
+- Call `ls()` BEFORE write_todos
+- Call `ls()` BEFORE any other tool
+- Call `ls()` IMMEDIATELY with no arguments
+- Do NOT create todos first
+- Do NOT think or plan first
+- Just call `ls()` right now
+
+## After ls(), follow this workflow:
+1. **Save Request**: Use `write_file()` to save the user's request to "user_request.md"
+2. **Create Plan**: Now you may use `write_todos` to create your research plan
+3. **Research**: Use `tavily_search` to find information
+4. **Read**: Use `read_file` to inspect findings before answering
 """
 
 SUMMARIZE_WEB_SEARCH = """You are creating a minimal summary for research steering - your goal is to help an agent know what information it has collected, NOT to preserve all details.
