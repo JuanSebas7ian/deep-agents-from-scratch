@@ -149,7 +149,7 @@ def scrape_webpage(url: str) -> str:
     Use this to read the full content of a URL found via search.
     """
     try:
-        with httpx.Client(timeout=30.0) as client:
+        with httpx.Client(timeout=30.0, verify=False) as client:
             response = client.get(url, follow_redirects=True)
             response.raise_for_status()
             
