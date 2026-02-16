@@ -3,7 +3,7 @@
 These tools replace the in-memory virtual filesystem and TODO list
 with DynamoDB persistence, enabling long-term state across sessions.
 
-DynamoDB Table Schema (DeepAgents_Artifacts):
+DynamoDB Table Schema (DeepAgents_Artifact):
     thread_id (String, PK): Session/thread identifier
     artifact_id (String, SK): Artifact key, prefixed by type:
         - FILE#<path>   — Virtual file content
@@ -34,7 +34,7 @@ _artifacts_table = None
 
 
 def _get_artifacts_table(
-    table_name: str = "DeepAgents_Artifacts",
+    table_name: str = "DeepAgents_Artifact",
     region_name: str = "us-east-1",
 ):
     """Get or create a singleton DynamoDB table reference."""

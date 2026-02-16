@@ -1,0 +1,5 @@
+langgraph>=0.2.0
+langchain-core
+langchain-aws
+boto3
+pydantic

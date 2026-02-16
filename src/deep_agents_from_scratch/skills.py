@@ -132,6 +132,7 @@ def load_skill(
     Returns:
         Full skill instructions or error message
     """
+    print(f"🛠️ [DEBUG] Entering 'load_skill' tool. Args: {skill_name}")
     files = state.get("files", {})
     skills = discover_skills(files)
 

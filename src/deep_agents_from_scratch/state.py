@@ -24,6 +24,27 @@ class Todo(TypedDict):
     status: Literal["pending", "in_progress", "completed"]
 
 
+class ExecutionEntry(TypedDict):
+    """A log entry for tracking each tool/node execution.
+
+    Used to build an audit trail comparing the TODO plan against
+    what the agent actually executed.
+
+    Attributes:
+        timestamp: ISO timestamp of the execution
+        node: Graph node name ("model", "tools")
+        tool_name: Name of the tool called ("tavily_search", "task", etc.) or "" for model
+        todo_ref: Index of the TODO item this relates to (-1 if none)
+        status: Result of the execution
+    """
+
+    timestamp: str
+    node: str
+    tool_name: str
+    todo_ref: int
+    status: Literal["success", "error", "skipped"]
+
+
 def file_reducer(left, right):
     """Merge two file dictionaries, with right side taking precedence.
 
@@ -45,13 +66,34 @@ def file_reducer(left, right):
         return {**left, **right}
 
 
+def log_reducer(left, right):
+    """Append new execution log entries to existing log.
+
+    Args:
+        left: Existing execution log entries
+        right: New execution log entries to append
+
+    Returns:
+        Combined list of all execution log entries
+    """
+    if left is None:
+        return right or []
+    elif right is None:
+        return left
+    else:
+        return left + right
+
+
 class DeepAgentState(AgentState):
-    """Extended agent state that includes task tracking and virtual file system.
+    """Extended agent state that includes task tracking, virtual file system,
+    and mandatory execution audit trail.
 
     Inherits from LangGraph's AgentState and adds:
     - todos: List of Todo items for task planning and progress tracking
     - files: Virtual file system stored as dict mapping filenames to content
+    - execution_log: Audit trail of every tool/node execution
     """
 
     todos: NotRequired[list[Todo]]
     files: Annotated[NotRequired[dict[str, str]], file_reducer]
+    execution_log: Annotated[NotRequired[list[ExecutionEntry]], log_reducer]

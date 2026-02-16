@@ -33,15 +33,28 @@ WRITE_TODOS_DESCRIPTION = """Create and manage structured task lists for trackin
 ## Returns
 Updates agent state with new todo list."""
 
-TODO_USAGE_INSTRUCTIONS = """Based upon the user's request:
-1. Use the write_todos tool to create TODO at the start of a user request, per the tool description.
-2. After you accomplish a TODO, use the read_todos to read the TODOs in order to remind yourself of the plan. 
-3. Reflect on what you've done and the TODO.
-4. Mark you task as completed, and proceed to the next TODO.
-5. Continue this process until you have completed all TODOs.
+TODO_USAGE_INSTRUCTIONS = """⛔ MANDATORY EXECUTION CONTRACT — The TODO list is NOT optional.
 
-IMPORTANT: Always create a research plan of TODOs and conduct research following the above guidelines for ANY user request.
+## Rules (Non-Negotiable)
+1. ALWAYS create a TODO plan using write_todos as your FIRST action on ANY user request.
+2. EVERY step in the TODO MUST be executed using the appropriate tool — NO exceptions.
+3. NEVER answer from memory alone — you MUST use tools to complete each step.
+4. After executing a step, mark it as completed using write_todos.
+5. Use read_todos frequently to verify your progress and remind yourself of remaining steps.
+6. You CANNOT finish until ALL steps show status "completed".
+7. The system will BLOCK you from ending if steps remain incomplete.
+8. If you have already executed tools in this turn, mark the corresponding steps as 'completed' in your initial plan.
+
+## Workflow
+1. Create your TODO plan (write_todos)
+2. Execute step 1 using the appropriate tool
+3. Mark step 1 completed (write_todos)
+4. Read TODOs to check progress (read_todos)
+5. Repeat for each remaining step
+6. Only provide your final answer AFTER all TODOs are completed
+
 IMPORTANT: Aim to batch research tasks into a *single TODO* in order to minimize the number of TODOs you have to keep track of.
+IMPORTANT: The system audits your execution. Skipped steps are flagged. Follow the script.
 """
 
 LS_DESCRIPTION = """List all files in the virtual filesystem stored in agent state.

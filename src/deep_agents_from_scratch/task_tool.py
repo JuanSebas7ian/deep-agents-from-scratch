@@ -82,6 +82,7 @@ def _create_task_tool(tools, subagents: list[SubAgent], model, state_schema):
         This creates a fresh context for the sub-agent containing only the task description,
         preventing context pollution from the parent agent's conversation history.
         """
+        print(f"🛠️ [DEBUG] Entering 'task' tool. Args: {description}, {subagent_type}")
         # Validate requested agent type exists
         if subagent_type not in agents:
             return f"Error: invoked agent of type {subagent_type}, the only allowed types are {[f'`{k}`' for k in agents]}"
@@ -94,19 +95,43 @@ def _create_task_tool(tools, subagents: list[SubAgent], model, state_schema):
         state["messages"] = [{"role": "user", "content": description}]
 
         # Execute the sub-agent in isolation
-        result = sub_agent.invoke(state)
+        try:
+            result = sub_agent.invoke(state)
+        except Exception as e:
+            import traceback
+            return f"Error executing sub-agent: {str(e)}\nTraceback:\n{traceback.format_exc()}"
 
-        # Return results to parent agent via Command state update
-        return Command(
-            update={
-                "files": result.get("files", {}),  # Merge any file changes
-                "messages": [
-                    # Sub-agent result becomes a ToolMessage in parent context
-                    ToolMessage(
-                        result["messages"][-1].content, tool_call_id=tool_call_id
-                    )
-                ],
-            }
-        )
+        # [NEW] Auto-Update Status Logic:
+        # Find the first 'pending' todo and mark it as 'completed'
+        current_todos = state.get("todos", [])
+        updated_todos = [t.copy() for t in current_todos] # Deep copy safe enough for dicts
+        
+        task_marked = False
+        for t in updated_todos:
+            if t.get("status") == "pending":
+                t["status"] = "completed"
+                task_marked = True
+                print(f"✅ [Auto-Mark] Task '{t.get('content')}' marked as completed.")
+                break
+        
+        # Prepare the state update
+        state_update = {
+            "files": result.get("files", {}),
+            "messages": [
+                ToolMessage(
+                    (
+                        f"{result['messages'][-1].content}\n\n"
+                        f"{'✅ SYSTEM: Task automatically marked as completed.' if task_marked else ''}"
+                    ), 
+                    tool_call_id=tool_call_id
+                )
+            ]
+        }
+        
+        if task_marked:
+            state_update["todos"] = updated_todos
+
+        # Return results via Command state update
+        return Command(update=state_update)
 
     return task
