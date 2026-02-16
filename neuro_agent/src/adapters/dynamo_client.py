@@ -8,16 +8,19 @@ profile_table = dynamodb.Table('UserProfiles')
 todo_table = dynamodb.Table('UserTodos')
 
 def fetch_context_from_dynamo(user_id: str) -> Dict[str, Any]:
-    """Reads context for the Blackboard. Zero cognitive load for LLM."""
-    try:
-        profile = profile_table.get_item(Key={'user_id': user_id}).get('Item', {})
-        todos_response = todo_table.query(
-            KeyConditionExpression=boto3.dynamodb.conditions.Key('user_id').eq(user_id)
-        )
-        todos = todos_response.get('Items', [])
-    except Exception as e:
-        print(f"DynamoDB Read Error: {e}")
-        profile, todos = {}, []
+    """
+    Reads context for the Blackboard.
+    CRITICAL: Fails loudly if DynamoDB is unreachable to prevent state corruption.
+    """
+    # Direct calls without try/except to allow Supervisor crash on DB failure
+    profile_response = profile_table.get_item(Key={'user_id': user_id})
+    profile = profile_response.get('Item', {})
+
+    todos_response = todo_table.query(
+        KeyConditionExpression=boto3.dynamodb.conditions.Key('user_id').eq(user_id)
+    )
+    todos = todos_response.get('Items', [])
+    
     return {"profile": profile, "todos": todos}
 
 @tool

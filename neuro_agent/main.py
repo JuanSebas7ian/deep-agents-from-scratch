@@ -1,5 +1,5 @@
 from neuro_agent.src.graph import create_agent_graph
-from neuro_agent.src.dynamo_client import fetch_context_from_dynamo
+from neuro_agent.src.adapters.dynamo_client import fetch_context_from_dynamo
 from neuro_agent.src.dynamo_checkpointer import DynamoDBSaver
 
 def get_app_runner_agent():

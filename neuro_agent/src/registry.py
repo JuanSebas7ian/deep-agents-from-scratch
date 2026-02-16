@@ -7,7 +7,8 @@ from .tools import (
     write_file, 
     read_todos, 
     write_todos, 
-    think_tool
+    think_tool,
+    scrape_webpage
 )
 
 
@@ -87,6 +88,17 @@ SUBAGENTS_REGISTRY: Dict[str, Dict[str, Any]] = {
             "required": ["todos"]
         },
         "runner": lambda todos: write_todos.invoke({"todos": todos})
+    },
+    "scrape_webpage": {
+        "description": "Scrape and convert a webpage to Markdown.",
+        "schema": {
+            "type": "object",
+            "properties": {
+                "url": {"type": "string"}
+            },
+            "required": ["url"]
+        },
+        "runner": lambda url: scrape_webpage.invoke({"url": url})
     },
     "think_tool": {
         "description": "Strategic reflection tool.",
