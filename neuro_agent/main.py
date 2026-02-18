@@ -1,30 +1,44 @@
-from neuro_agent.src.graph import create_agent_graph
-from neuro_agent.src.adapters.dynamo_client import fetch_context_from_dynamo
-from neuro_agent.src.dynamo_checkpointer import DynamoDBSaver
+import os
+from dotenv import load_dotenv
+from src.supervisor.graph import create_agent_graph
+from src.shared.config import bootstrap_tool_registry
+from src.shared.dynamo_checkpointer import ChunkedDynamoDBSaver
+from src.shared.tools import get_context
 
-def get_app_runner_agent():
-    # 1. Initialize Hot Memory Checkpointer
-    memory_saver = DynamoDBSaver(table_name="LangGraphCheckpoints")
-    # 2. Build the graph
-    return create_agent_graph(checkpointer=memory_saver)
+load_dotenv()
 
-if __name__ == "__main__":
-    # Simulate a request in the App Runner context
-    app = get_app_runner_agent()
-    user_id = "user_neuro_001"
+def main():
+    print("🚀 Starting Local NeuroAgent...")
+
+    # 1. Bootstrap via Factory
+    registry = bootstrap_tool_registry()
+    print(f"🔧 Tools Loaded: {registry.list_tools()}")
+
+    # 2. Infra
+    checkpointer = ChunkedDynamoDBSaver()
+    app = create_agent_graph(checkpointer=checkpointer)
+
+    # 3. Injection
     config = {
         "configurable": {
-            "thread_id": user_id,
-            "fetch_user_context": fetch_context_from_dynamo
+            "thread_id": "local_test_user",
+            "tool_registry": registry,
+            "fetch_user_context": get_context
         }
     }
+
+    # 4. Interact
+    # user_input = input("User: ")
+    # Hardcoded for non-interactive run in this environment, but kept the structure
+    user_input = "My house is a mess, I need to clean but I am overwhelmed."
+    print(f"User: {user_input}")
     
-    inputs = {
-        "messages": [("user", "My house is a mess, I need to clean but I am overwhelmed.")],
-        "user_id": user_id
-    }
+    inputs = {"messages": [("user", user_input)], "user_id": "local_test_user"}
     
-    print("App Runner Supervisor is reasoning...")
-    result = app.invoke(inputs, config=config)
-    print("\n--- AGENT RESPONSE ---")
-    print(result["messages"][-1].content)
+    for event in app.stream(inputs, config=config):
+        for node, val in event.items():
+            if "messages" in val:
+                print(f"🤖 {val['messages'][-1].content}")
+
+if __name__ == "__main__":
+    main()

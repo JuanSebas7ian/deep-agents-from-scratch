@@ -1,4 +1,4 @@
-from .state import AgentState
+from src.shared.state import AgentState
 from langchain_core.runnables import RunnableConfig
 
 def prepare_blackboard_node(state: AgentState, config: RunnableConfig) -> dict:

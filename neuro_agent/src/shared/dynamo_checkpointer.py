@@ -46,7 +46,7 @@ DEFAULT_CHECKPOINTS_TABLE = os.getenv("DYNAMO_TABLE_CHECKPOINTS", "LangGraphChec
 DEFAULT_WRITES_TABLE = os.getenv("DYNAMO_TABLE_WRITES", "LangGraphWrites")
 
 
-class DynamoDBSaver(BaseCheckpointSaver):
+class ChunkedDynamoDBSaver(BaseCheckpointSaver):
     """Robust DynamoDB checkpointer with Compression and Chunking.
 
     Solves the "Item size has exceeded the maximum allowed size" error by:
@@ -296,3 +296,6 @@ class DynamoDBSaver(BaseCheckpointSaver):
     async def alist(self, config: Optional[RunnableConfig], **kwargs) -> AsyncIterator[CheckpointTuple]:
         # Generator for async compatibility
         if False: yield 
+
+# Alias for backward compatibility / ease of use
+DynamoDBSaver = ChunkedDynamoDBSaver
