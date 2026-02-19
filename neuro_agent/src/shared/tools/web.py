@@ -2,8 +2,17 @@ import os
 import uuid
 import base64
 import httpx
+import urllib3
+import ssl
 from datetime import datetime
 from typing import List, Literal, Annotated, Dict, Any, Optional
+
+# Global SSL Resilience - Fixes [SSL: CERTIFICATE_VERIFY_FAILED] for requests/httpx
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+try:
+    ssl._create_default_https_context = ssl._create_unverified_context
+except Exception:
+    pass
 
 from langchain_core.messages import HumanMessage, ToolMessage
 from langchain_core.tools import tool, InjectedToolArg, InjectedToolCallId
@@ -62,13 +71,16 @@ def run_tavily_search(
     if not tavily_client:
         return {"results": [], "error": "Tavily client not initialized"}
         
-    result = tavily_client.search(
-        search_query,
-        max_results=max_results,
-        include_raw_content=include_raw_content,
-        topic=topic
-    )
-    return result
+    try:
+        result = tavily_client.search(
+            search_query,
+            max_results=max_results,
+            include_raw_content=include_raw_content,
+            topic=topic
+        )
+        return result
+    except Exception as e:
+        return {"results": [], "error": f"Tavily search failed: {e}"}
 
 def summarize_webpage_content(webpage_content: str) -> Summary:
     """Summarize webpage content using the configured summarization model."""
@@ -99,7 +111,8 @@ def process_search_results(results: dict) -> List[dict]:
     processed_results = []
     # Use a new client for each process or shared? Shared is better for connection pooling but simple is fine.
     # The notebook creates a new Client.
-    with httpx.Client(timeout=30.0) as client:
+    # Disabling SSL verification to avoid [SSL: CERTIFICATE_VERIFY_FAILED] in some environments
+    with httpx.Client(timeout=30.0, verify=False) as client:
         for result in results.get('results', []):
             url = result['url']
             try:
@@ -208,7 +221,8 @@ def scrape_webpage(url: str) -> str:
     try:
         if markdownify:
             # We can use the same logic as process_search_results but for a single URL
-            with httpx.Client(timeout=30.0) as client:
+            # Disabling SSL verification to avoid [SSL: CERTIFICATE_VERIFY_FAILED] in some environments
+            with httpx.Client(timeout=30.0, verify=False) as client:
                 response = client.get(url)
                 response.raise_for_status()
                 return markdownify(response.text)

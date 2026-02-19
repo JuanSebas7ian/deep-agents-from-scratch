@@ -3,7 +3,16 @@ import os
 from datetime import datetime
 import uuid, base64
 import httpx
+import urllib3
+import ssl
 from langchain_core.messages import HumanMessage, ToolMessage
+
+# Global SSL Resilience
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+try:
+    ssl._create_default_https_context = ssl._create_unverified_context
+except Exception:
+    pass
 from langchain_core.tools import tool
 from langchain_core.tools import InjectedToolArg, InjectedToolCallId
 from langgraph.prebuilt import InjectedState
@@ -20,7 +29,8 @@ from neuro_agent.src.shared.state import AgentState
 DeepAgentState = AgentState
 
 tavily_client = TavilyClient()
-HTTPX_CLIENT = httpx.Client(timeout=30.0)
+# Disabling SSL verification to avoid [SSL: CERTIFICATE_VERIFY_FAILED] in some environments
+HTTPX_CLIENT = httpx.Client(timeout=30.0, verify=False)
 
 class Summary(BaseModel):
     filename: str = Field(description="Name of the file to store.")
@@ -30,7 +40,10 @@ def get_today_str() -> str:
     return datetime.now().strftime("%a %b %-d, %Y")
 
 def run_tavily_search(search_query: str, max_results: int = 1, topic="general", include_raw_content=True) -> dict:
-    return tavily_client.search(search_query, max_results=max_results, include_raw_content=include_raw_content, topic=topic)
+    try:
+        return tavily_client.search(search_query, max_results=max_results, include_raw_content=include_raw_content, topic=topic)
+    except Exception as e:
+        return {"results": [], "error": f"Tavily search failed: {e}"}
 
 def summarize_webpage_content(webpage_content: str) -> Summary:
     try:

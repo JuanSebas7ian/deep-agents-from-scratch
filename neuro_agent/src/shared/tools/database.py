@@ -4,6 +4,8 @@ import uuid
 from functools import lru_cache
 from typing import Dict, Any
 
+from langchain_core.tools import tool
+
 # --- Private Adapter Logic (Oculta) ---
 @lru_cache(maxsize=None)
 def _get_table(env_var, default_name):
@@ -12,6 +14,7 @@ def _get_table(env_var, default_name):
 
 # --- Public Tools (Visible para el Agente) ---
 
+@tool
 def save_task(user_id: str, description: str) -> str:
     """
     TOOL: Guarda una nueva tarea en la base de datos.
@@ -30,6 +33,7 @@ def save_task(user_id: str, description: str) -> str:
     except Exception as e:
         return f"Error guardando tarea: {e}"
 
+@tool
 def get_context(user_id: str) -> Dict[str, Any]:
     """
     TOOL: Recupera todo lo que sabemos del usuario (Perfil + Tareas).
