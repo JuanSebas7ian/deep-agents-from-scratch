@@ -10,10 +10,10 @@ print(f"Project root: {project_root}")
 print(f"Sys Path: {sys.path}")
 
 try:
-    from neuro_agent.src.shared.state import AgentState
+    from neuro_agent.domain.state import AgentState
     print("✅ Successfully imported AgentState")
     
-    from neuro_agent.src.shared.tools.research import (
+    from neuro_agent.infrastructure.tools.research import (
         tavily_search,
         scrape_webpage,
         think_tool,

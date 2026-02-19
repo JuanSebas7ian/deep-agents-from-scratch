@@ -22,7 +22,7 @@ from pydantic import BaseModel, Field
 from tavily import TavilyClient
 
 from langchain_aws import ChatBedrockConverse
-from neuro_agent.src.shared.state import AgentState
+from domain.state import AgentState
 
 try:
     from markdownify import markdownify

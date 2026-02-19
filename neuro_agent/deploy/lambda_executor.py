@@ -2,7 +2,7 @@ import json
 from langchain_aws import ChatBedrockConverse
 from langchain_core.messages import SystemMessage, HumanMessage
 # Note: In AWS Lambda, src.dynamo_client must be packaged in the deployment zip
-from src.shared.tools.database import save_task as write_task_to_dynamo
+from infrastructure.tools.database import save_task as write_task_to_dynamo
 
 # The Idiot Agent: Ultra-fast cold start (Nova Lite)
 executor_llm = ChatBedrockConverse(

@@ -6,13 +6,6 @@ import httpx
 import urllib3
 import ssl
 from langchain_core.messages import HumanMessage, ToolMessage
-
-# Global SSL Resilience
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-try:
-    ssl._create_default_https_context = ssl._create_unverified_context
-except Exception:
-    pass
 from langchain_core.tools import tool
 from langchain_core.tools import InjectedToolArg, InjectedToolCallId
 from langgraph.prebuilt import InjectedState
@@ -23,13 +16,19 @@ from tavily import TavilyClient
 from typing import Annotated, Literal, Optional, Any
 from langchain_aws import ChatBedrockConverse
 
+# Global SSL Resilience
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+try:
+    ssl._create_default_https_context = ssl._create_unverified_context
+except Exception:
+    pass
+
 summarization_model = ChatBedrockConverse(model="us.amazon.nova-pro-v1:0", region_name="us-east-1", temperature=0.0)
 from deep_agents_from_scratch.prompts import SUMMARIZE_WEB_SEARCH
-from neuro_agent.src.shared.state import AgentState
+from neuro_agent.domain.state import AgentState
 DeepAgentState = AgentState
 
 tavily_client = TavilyClient()
-# Disabling SSL verification to avoid [SSL: CERTIFICATE_VERIFY_FAILED] in some environments
 HTTPX_CLIENT = httpx.Client(timeout=30.0, verify=False)
 
 class Summary(BaseModel):

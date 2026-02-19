@@ -2,7 +2,7 @@ from langchain_aws import ChatBedrockConverse
 from langchain_core.messages import SystemMessage, HumanMessage
 import json
 # Imported from shared lib inside the zip
-from src.shared.tools import save_task
+from infrastructure.tools import save_task
 
 # Warm start initialization
 llm = ChatBedrockConverse(model_id="us.amazon.nova-lite-v1:0").bind_tools([save_task])

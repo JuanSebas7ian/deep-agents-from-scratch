@@ -1,7 +1,7 @@
 import os
-from src.shared.registry import ToolRegistry
+from domain.registry import ToolRegistry
 # ✅ IMPORTACIÓN LIMPIA Y SEMÁNTICA
-from src.shared.tools import tavily_search, read_page, delegate_task
+from infrastructure.tools import tavily_search, read_page, delegate_task
 
 def bootstrap_tool_registry() -> ToolRegistry:
     """

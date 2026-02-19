@@ -1,4 +1,4 @@
-from src.shared.state import AgentState
+from domain.state import AgentState
 from langchain_core.runnables import RunnableConfig
 
 def prepare_blackboard_node(state: AgentState, config: RunnableConfig) -> dict:
@@ -9,7 +9,10 @@ def prepare_blackboard_node(state: AgentState, config: RunnableConfig) -> dict:
     if not fetch_function:
         raise ValueError("fetch_user_context missing in config")
         
-    context_data = fetch_function(user_id)
+    if hasattr(fetch_function, "invoke"):
+        context_data = fetch_function.invoke({"user_id": user_id})
+    else:
+        context_data = fetch_function(user_id)
 
     return {
         "todos": context_data.get("todos", []),

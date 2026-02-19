@@ -4,7 +4,7 @@ from langchain_core.tools import tool, InjectedToolCallId
 from langgraph.prebuilt import InjectedState
 from langgraph.types import Command
 from langchain_core.messages import ToolMessage
-from neuro_agent.src.shared.state import AgentState
+from domain.state import AgentState
 
 @tool
 def ls(state: Annotated[Optional[dict], InjectedState] = None) -> list[str]:

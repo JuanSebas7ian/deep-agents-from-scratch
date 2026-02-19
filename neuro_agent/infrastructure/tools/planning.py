@@ -4,7 +4,7 @@ from langchain_core.tools import tool
 from langgraph.types import Command
 from langgraph.prebuilt import InjectedState
 from langchain_core.messages import ToolMessage
-from neuro_agent.src.shared.state import AgentState
+from domain.state import AgentState
 
 from langchain_core.tools import tool, InjectedToolCallId
 # ...

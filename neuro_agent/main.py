@@ -1,11 +1,14 @@
+import sys
+from pathlib import Path
 import os
 from dotenv import load_dotenv
-from src.supervisor.graph import create_agent_graph
-from src.shared.config import bootstrap_tool_registry
-from src.shared.dynamo_checkpointer import ChunkedDynamoDBSaver
-from src.shared.tools import get_context
-
 load_dotenv()
+
+from apps.supervisor.graph import create_agent_graph
+from domain.config import bootstrap_tool_registry
+from infrastructure.memory.dynamo_checkpointer import ChunkedDynamoDBSaver
+from infrastructure.tools import get_context
+
 
 def main():
     print("🚀 Starting Local NeuroAgent...")

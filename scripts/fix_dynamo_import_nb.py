@@ -22,7 +22,7 @@ def fix_dynamo_import():
             new_source = [
                 "# --- CONFIGURACIÓN DE CHECKPOINTER ---\n",
                 "# Using custom ChunkedDynamoDBSaver from shared kernel\n",
-                "from neuro_agent.src.shared.dynamo_checkpointer import DynamoDBSaver\n",
+                "from neuro_agent.infrastructure.memory.dynamo_checkpointer import DynamoDBSaver\n",
                 "\n",
                 "# Initialize DynamoDB Checkpointer (Strict)\n",
                 "checkpointer = DynamoDBSaver(table_name=\"LangGraphCheckpoints\")\n",

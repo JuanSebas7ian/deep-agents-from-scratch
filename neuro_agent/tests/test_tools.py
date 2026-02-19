@@ -7,10 +7,10 @@ from pathlib import Path
 # Add project root to path
 sys.path.append(str(Path(__file__).parents[2]))
 
-from neuro_agent.src.shared.tools import web, database, delegation
+from infrastructure.tools import web, database, delegation
 
 class TestWebTools(unittest.TestCase):
-    @patch('neuro_agent.src.shared.tools.web.TavilySearchResults')
+    @patch('neuro_agent.infrastructure.tools.web.TavilySearchResults')
     def test_search_success(self, mock_tavily):
         mock_instance = mock_tavily.return_value
         mock_instance.invoke.return_value = "Snippets found"
@@ -19,7 +19,7 @@ class TestWebTools(unittest.TestCase):
         self.assertEqual(result, "Snippets found")
         mock_instance.invoke.assert_called_with({"query": "test query"})
 
-    @patch('neuro_agent.src.shared.tools.web.requests.get')
+    @patch('neuro_agent.infrastructure.tools.web.requests.get')
     def test_read_page_success(self, mock_get):
         mock_response = MagicMock()
         mock_response.content = b"<html><body><p>Hello World</p><script>bad</script></body></html>"
@@ -36,7 +36,7 @@ class TestDatabaseTools(unittest.TestCase):
         os.environ['DYNAMO_TABLE_PROFILES'] = 'TestProfiles'
         database._get_table.cache_clear()
 
-    @patch('neuro_agent.src.shared.tools.database.boto3.resource')
+    @patch('neuro_agent.infrastructure.tools.database.boto3.resource')
     def test_save_task(self, mock_boto):
         mock_table = MagicMock()
         mock_boto.return_value.Table.return_value = mock_table
@@ -45,7 +45,7 @@ class TestDatabaseTools(unittest.TestCase):
         self.assertIn("Tarea guardada correctamente", result)
         mock_table.put_item.assert_called()
 
-    @patch('neuro_agent.src.shared.tools.database.boto3.resource')
+    @patch('neuro_agent.infrastructure.tools.database.boto3.resource')
     def test_get_context(self, mock_boto):
         mock_table_profile = MagicMock()
         mock_table_todos = MagicMock()
@@ -70,7 +70,7 @@ class TestDelegationTools(unittest.TestCase):
         os.environ['AWS_REGION'] = 'us-east-1'
         os.environ['EXECUTOR_LAMBDA_ARN'] = 'arn:aws:lambda:us-east-1:123:function:executor'
 
-    @patch('neuro_agent.src.shared.tools.delegation.boto3.client')
+    @patch('neuro_agent.infrastructure.tools.delegation.boto3.client')
     def test_delegate_task(self, mock_client):
         mock_lambda = mock_client.return_value
         mock_payload = MagicMock()

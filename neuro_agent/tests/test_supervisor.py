@@ -7,10 +7,10 @@ from unittest.mock import patch, MagicMock, ANY
 sys.path.append(str(Path(__file__).parents[2] / "neuro_agent"))
 
 from langchain_core.messages import HumanMessage
-from neuro_agent.src.supervisor.nodes import supervisor_node
+from apps.supervisor.nodes import supervisor_node
 
 class TestSupervisor(unittest.TestCase):
-    @patch('neuro_agent.src.supervisor.nodes.boto3.client')
+    @patch('neuro_agent.apps.supervisor.nodes.boto3.client')
     def test_supervisor_basic_flow(self, mock_boto):
         # Setup Mock Bedrock
         mock_client = mock_boto.return_value
@@ -49,7 +49,7 @@ class TestSupervisor(unittest.TestCase):
             toolConfig={'tools': [{"toolSpec": {}}]}
         )
 
-    @patch('neuro_agent.src.supervisor.nodes.boto3.client')
+    @patch('neuro_agent.apps.supervisor.nodes.boto3.client')
     def test_supervisor_tool_call(self, mock_boto):
         # Setup Mock Bedrock returning Tool Use
         mock_client = mock_boto.return_value

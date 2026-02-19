@@ -4,7 +4,7 @@ import inspect
 from pathlib import Path
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.runnables import RunnableConfig
-from src.shared.state import AgentState
+from domain.state import AgentState
 
 def load_skill() -> str:
     """Loads the supervisor system prompt from the skills directory."""
@@ -49,7 +49,7 @@ def supervisor_node(state: AgentState, config: RunnableConfig) -> dict:
     # 1. Dependency Injection
     registry = config.get("configurable", {}).get("tool_registry")
     if not registry: 
-        from src.shared.config import bootstrap_tool_registry
+        from domain.config import bootstrap_tool_registry
         registry = bootstrap_tool_registry()
 
     # 2. AWS Client Initialization

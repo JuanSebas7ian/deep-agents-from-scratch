@@ -44,6 +44,8 @@ TODO_USAGE_INSTRUCTIONS = """⛔ MANDATORY EXECUTION CONTRACT — The TODO list 
 6. You CANNOT finish until ALL steps show status "completed".
 7. The system will BLOCK you from ending if steps remain incomplete.
 8. If you have already executed tools in this turn, mark the corresponding steps as 'completed' in your initial plan.
+9. 🛑 CRITICAL: Before providing your final answer, you MUST call `read_todos()` one final time to mathematically verify the list contains NO pending items.
+10. 🛑 CRITICAL: Before providing your final answer, you MUST call `think_tool()` to synthesize the completed tasks into a coherent summary.
 
 ## Workflow
 1. Create your TODO plan (write_todos)
@@ -51,7 +53,9 @@ TODO_USAGE_INSTRUCTIONS = """⛔ MANDATORY EXECUTION CONTRACT — The TODO list 
 3. Mark step 1 completed (write_todos)
 4. Read TODOs to check progress (read_todos)
 5. Repeat for each remaining step
-6. Only provide your final answer AFTER all TODOs are completed
+6. Verify completion (read_todos)
+7. Synthesize findings (think_tool)
+8. Provide your final answer.
 
 IMPORTANT: Aim to batch research tasks into a *single TODO* in order to minimize the number of TODOs you have to keep track of.
 IMPORTANT: The system audits your execution. Skipped steps are flagged. Follow the script.

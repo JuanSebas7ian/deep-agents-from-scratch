@@ -18,7 +18,7 @@ for cell in nb.get("cells", []):
         new_source = []
         for line in source:
             if "from neuro_agent.src.tools import" in line:
-                new_line = line.replace("from neuro_agent.src.tools import", "from neuro_agent.src.shared.tools import")
+                new_line = line.replace("from neuro_agent.src.tools import", "from neuro_agent.infrastructure.tools import")
                 new_source.append(new_line)
                 changed = True
             else:

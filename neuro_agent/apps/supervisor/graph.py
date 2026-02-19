@@ -1,7 +1,7 @@
 from langgraph.graph import StateGraph, START, END
-from src.shared.state import AgentState
-from src.supervisor.blackboard import prepare_blackboard_node
-from src.supervisor.nodes import supervisor_node
+from domain.state import AgentState
+from apps.supervisor.blackboard import prepare_blackboard_node
+from apps.supervisor.nodes import supervisor_node
 
 def create_agent_graph(checkpointer=None):
     """Minimalist graph. Sub-agents are completely abstracted into remote tools."""

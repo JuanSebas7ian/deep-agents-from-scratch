@@ -42,7 +42,7 @@ try:
                     "\n",
                     "summarization_model = ChatBedrockConverse(model=\"us.amazon.nova-pro-v1:0\", region_name=\"us-east-1\", temperature=0.0)\n",
                     "from deep_agents_from_scratch.prompts import SUMMARIZE_WEB_SEARCH\n",
-                    "from neuro_agent.src.shared.state import AgentState\n",
+                    "from neuro_agent.domain.state import AgentState\n",
                     "DeepAgentState = AgentState\n",
                     "\n",
                     "tavily_client = TavilyClient()\n",
