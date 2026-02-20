@@ -1,4 +1,4 @@
-from domain.state import AgentState
+from neuro_agent.domain.state import AgentState
 from langchain_core.runnables import RunnableConfig
 
 def prepare_blackboard_node(state: AgentState, config: RunnableConfig) -> dict:

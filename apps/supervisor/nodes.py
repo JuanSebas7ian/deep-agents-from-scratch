@@ -4,7 +4,7 @@ import inspect
 from pathlib import Path
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.runnables import RunnableConfig
-from domain.state import AgentState
+from neuro_agent.domain.state import AgentState
 
 def load_skill() -> str:
     """Loads the supervisor system prompt from the skills directory."""
@@ -13,8 +13,8 @@ def load_skill() -> str:
     # 2. neuro_agent/skills/supervisor.md (Relative to CWD)
     
     candidates = [
-        Path(__file__).parents[2] / "skills" / "supervisor.md",
-        Path(os.getcwd()) / "neuro_agent" / "skills" / "supervisor.md"
+        Path(__file__).parents[2] / "src" / "neuro_agent" / "skills" / "supervisor.md",
+        Path(os.getcwd()) / "src" / "neuro_agent" / "skills" / "supervisor.md"
     ]
     
     for path in candidates:
@@ -49,7 +49,7 @@ def supervisor_node(state: AgentState, config: RunnableConfig) -> dict:
     # 1. Dependency Injection
     registry = config.get("configurable", {}).get("tool_registry")
     if not registry: 
-        from domain.config import bootstrap_tool_registry
+        from neuro_agent.domain.config import bootstrap_tool_registry
         registry = bootstrap_tool_registry()
 
     # 2. AWS Client Initialization

@@ -1,5 +1,5 @@
 from langgraph.graph import StateGraph, START, END
-from domain.state import AgentState
+from neuro_agent.domain.state import AgentState
 from apps.supervisor.blackboard import prepare_blackboard_node
 from apps.supervisor.nodes import supervisor_node
 

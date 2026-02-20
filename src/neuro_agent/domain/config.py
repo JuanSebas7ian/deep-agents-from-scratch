@@ -1,7 +1,7 @@
 import os
-from domain.registry import ToolRegistry
+from neuro_agent.domain.registry import ToolRegistry
 # ✅ IMPORTACIÓN LIMPIA Y SEMÁNTICA
-from infrastructure.tools import tavily_search, read_page, delegate_task
+from neuro_agent.infrastructure.tools import tavily_search, read_page, delegate_task
 
 def bootstrap_tool_registry() -> ToolRegistry:
     """

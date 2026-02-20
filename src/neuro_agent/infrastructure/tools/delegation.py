@@ -8,7 +8,7 @@ from langgraph.prebuilt import ToolNode, InjectedState
 from langchain_core.messages import SystemMessage, ToolMessage
 from langchain_core.tools import tool, InjectedToolCallId, BaseTool
 from langgraph.types import Command
-from domain.state import AgentState
+from neuro_agent.domain.state import AgentState
 
 def delegate_task(user_id: str, instructions: str) -> str:
     """Envía una tarea compleja al Subagente Ejecutor (Lambda)."""

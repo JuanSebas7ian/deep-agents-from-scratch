@@ -6,8 +6,8 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parents[2] / "neuro_agent"))
 
 import unittest
-from domain.registry import ToolRegistry
-from domain.config import bootstrap_tool_registry
+from neuro_agent.domain.registry import ToolRegistry
+from neuro_agent.domain.config import bootstrap_tool_registry
 from unittest.mock import patch, MagicMock
 
 # Dummy runner

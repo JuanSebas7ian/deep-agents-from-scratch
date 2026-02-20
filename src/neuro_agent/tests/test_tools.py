@@ -7,7 +7,7 @@ from pathlib import Path
 # Add project root to path
 sys.path.append(str(Path(__file__).parents[2]))
 
-from infrastructure.tools import web, database, delegation
+from neuro_agent.infrastructure.tools import web, database, delegation
 
 class TestWebTools(unittest.TestCase):
     @patch('neuro_agent.infrastructure.tools.web.TavilySearchResults')

@@ -152,7 +152,7 @@ except Exception as e:
 # PASO 4: VALIDAR EL "CEREBRO" (Supervisor + Tools Agnostiocas)
 # =============================================================================
 from langchain_aws import ChatBedrockConverse
-from langgraph.prebuilt import create_react_agent
+from langchain.agents import create_agent
 from langchain_core.messages import HumanMessage
 from neuro_agent.infrastructure.tools import (
     tavily_search, think_tool, ls, read_file, write_file, 
@@ -166,7 +166,7 @@ llm = ChatBedrockConverse(model="us.amazon.nova-pro-v1:0", region_name="us-east-
 tools = [ls, read_file, write_file, write_todos, read_todos, think_tool, tavily_search, scrape_webpage]
 
 # 2. Create Agent
-agent = create_react_agent(llm, tools=tools)
+agent = create_agent(llm, tools=tools)
 
 # 3. Run Query
 USER_QUERY = "Give me a brief overview of Model Context Protocol (MCP) using a web search. Read the docs if possible."

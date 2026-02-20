@@ -5,9 +5,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from apps.supervisor.graph import create_agent_graph
-from domain.config import bootstrap_tool_registry
-from infrastructure.memory.dynamo_checkpointer import ChunkedDynamoDBSaver
-from infrastructure.tools import get_context
+from neuro_agent.domain.config import bootstrap_tool_registry
+from neuro_agent.infrastructure.memory.dynamo_checkpointer import ChunkedDynamoDBSaver
+from neuro_agent.infrastructure.tools import get_context
 
 
 def main():

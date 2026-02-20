@@ -44,8 +44,7 @@ TODO_USAGE_INSTRUCTIONS = """⛔ MANDATORY EXECUTION CONTRACT — The TODO list 
 6. You CANNOT finish until ALL steps show status "completed".
 7. The system will BLOCK you from ending if steps remain incomplete.
 8. If you have already executed tools in this turn, mark the corresponding steps as 'completed' in your initial plan.
-9. 🛑 CRITICAL: Before providing your final answer, you MUST call `read_todos()` one final time to mathematically verify the list contains NO pending items.
-10. 🛑 CRITICAL: Before providing your final answer, you MUST call `think_tool()` to synthesize the completed tasks into a coherent summary.
+9. 💡 BEST PRACTICE: Before providing your final answer, please call `read_todos()` and `think_tool()` to quickly verify all tasks are done and synthesize your findings.
 
 ## Workflow
 1. Create your TODO plan (write_todos)

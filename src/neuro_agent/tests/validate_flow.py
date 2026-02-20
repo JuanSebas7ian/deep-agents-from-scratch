@@ -11,12 +11,13 @@ load_dotenv()
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
 from langchain_aws import ChatBedrockConverse
-from langgraph.prebuilt import create_react_agent
+from langchain.agents import create_agent
 from langchain_core.messages import HumanMessage
+from neuro_agent.domain.state import AgentState as DeepAgentState
 
 # Import Tools
 try:
-    from neuro_agent.src.tools import (
+    from neuro_agent.infrastructure.tools import (
         tavily_search, think_tool, ls, read_file, write_file, 
         write_todos, read_todos, get_today_str, scrape_webpage
     )
@@ -38,7 +39,7 @@ def validate_flow():
     tools = [ls, read_file, write_file, write_todos, read_todos, think_tool, tavily_search, scrape_webpage]
 
     # 2. Create Agent
-    agent = create_react_agent(llm, tools=tools)
+    agent = create_agent(llm, tools=tools, state_schema=DeepAgentState)
 
     # 3. Run Query
     # Use a query that REQUIRES reading content to answer well
