@@ -77,7 +77,7 @@ def tavily_search(
     query: str, 
     state: Annotated[Optional[dict], InjectedState] = None, 
     tool_call_id: Annotated[Optional[str], InjectedToolCallId] = None, 
-    max_results: Annotated[int, InjectedToolArg] = 1, 
+    max_results: int = 1, 
     topic: Annotated[Literal["general", "news", "finance"], InjectedToolArg] = "general"
 ) -> Command:
     """Search web and save results."""

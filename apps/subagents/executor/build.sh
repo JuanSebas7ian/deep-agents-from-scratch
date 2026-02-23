@@ -10,10 +10,8 @@ mkdir package
 cp handler.py package/
 
 # 3. Copiar la Librería Compartida (La magia de la Opción A)
-# Creamos la carpeta destino para que Python pueda hacer: from src.neuro_agent import ...
-mkdir -p package/src
-# Copiamos SOLO el contenido de código, ignorando pycache
-cp -r ../../../src/neuro_agent package/src/
+# Copiamos SOLO el contenido de código, ignorando pycache, directo a la raíz del package
+cp -r ../../../src/neuro_agent package/neuro_agent/
 
 # 4. Instalar dependencias LIGERAS específicas de esta Lambda
 pip install -r requirements.txt -t package/ --no-cache-dir
@@ -22,11 +20,12 @@ pip install -r requirements.txt -t package/ --no-cache-dir
 # Eliminar __pycache__ y archivos innecesarios que pip a veces trae
 find package -type d -name "__pycache__" -exec rm -rf {} +
 find package -type d -name "tests" -exec rm -rf {} +
-find package -type d -name "dist-info" -exec rm -rf {} +
+find package -type d -name "*.dist-info" -exec rm -rf {} +
 
-# 6. Zippear
+# 6. Zippear usando Python (ya que zip puede no estar instalado)
 cd package
-zip -r ../executor.zip .
+python3 -m zipfile -c ../executor.zip ./*
 cd ..
 
 echo "✅ Lambda lista para subir: apps/subagents/executor/executor.zip"
+

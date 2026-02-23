@@ -156,10 +156,10 @@ def process_search_results(results: dict) -> List[dict]:
 @tool
 def tavily_search(
     query: str,
-    state: Annotated[AgentState, InjectedState], 
-    tool_call_id: Annotated[str, InjectedToolCallId],
-    max_results: Annotated[int, InjectedToolArg] = 1,
-    topic: Annotated[Literal["general", "news", "finance"], InjectedToolArg] = "general",
+    state: Annotated[Optional[dict], InjectedState] = None, 
+    tool_call_id: Annotated[Optional[str], InjectedToolCallId] = None,
+    max_results: int = 1,
+    topic: Literal["general", "news", "finance"] = "general",
 ) -> Command:
     """Search web and save detailed results to files while returning minimal context."""
     search_results = run_tavily_search(
