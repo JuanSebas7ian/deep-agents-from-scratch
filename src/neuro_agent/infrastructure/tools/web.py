@@ -23,6 +23,7 @@ from tavily import TavilyClient
 
 from langchain_aws import ChatBedrockConverse
 from neuro_agent.domain.state import AgentState
+from neuro_agent.infrastructure.prompts import SUMMARIZE_WEB_SEARCH
 
 try:
     from markdownify import markdownify
@@ -44,13 +45,7 @@ try:
 except Exception:
     tavily_client = None
 
-# --- Prompts ---
-SUMMARIZE_WEB_SEARCH = """
-You are a research assistant. Summarize the following webpage content.
-Date: {date}
-Content:
-{webpage_content}
-"""
+# SUMMARIZE_WEB_SEARCH is imported from neuro_agent.infrastructure.prompts
 
 class Summary(BaseModel):
     """Schema for webpage content summarization."""

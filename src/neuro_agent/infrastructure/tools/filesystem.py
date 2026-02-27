@@ -5,15 +5,16 @@ from langgraph.prebuilt import InjectedState
 from langgraph.types import Command
 from langchain_core.messages import ToolMessage
 from neuro_agent.domain.state import AgentState
+from neuro_agent.infrastructure.prompts import LS_DESCRIPTION, READ_FILE_DESCRIPTION, WRITE_FILE_DESCRIPTION
 
-@tool
+@tool(description=LS_DESCRIPTION)
 def ls(state: Annotated[Optional[dict], InjectedState] = None) -> list[str]:
     """List all files in the virtual filesystem."""
     if state is None:
         return []
     return list(state.get("files", {}).keys())
 
-@tool
+@tool(description=READ_FILE_DESCRIPTION)
 def read_file(
     file_path: str,
     state: Annotated[Optional[dict], InjectedState] = None,
@@ -45,7 +46,7 @@ def read_file(
 
     return "\n".join(result_lines)
 
-@tool
+@tool(description=WRITE_FILE_DESCRIPTION)
 def write_file(
     file_path: str,
     content: str,

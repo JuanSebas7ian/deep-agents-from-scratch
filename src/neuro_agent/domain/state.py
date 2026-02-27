@@ -30,7 +30,7 @@ class AgentState(TypedDict):
     """
     messages: Annotated[Sequence[BaseMessage], add_messages]
     user_id: str
-    todos: Annotated[list[Todo], log_reducer] # Use log_reducer or similar if needed, or simple overwrite
+    todos: list[Todo]  # Overwrite semantics (matches deep_agents pattern)
     profile: Dict[str, Any]
     files: Annotated[NotRequired[dict[str, str]], file_reducer]
     execution_log: Annotated[NotRequired[list[ExecutionEntry]], log_reducer]
